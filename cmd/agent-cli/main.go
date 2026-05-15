@@ -20,14 +20,14 @@ func main() {
 		Run: func(cmd *cobra.Command, args []string) {
 			reader := bufio.NewReader(os.Stdin)
 
-			// 2. Interactive input for Name (if flag is empty)
+			
 			if agentName == "" {
 				fmt.Print("Enter Agent Name: ")
 				name, _ := reader.ReadString('\n')
 				agentName = strings.TrimSpace(name)
 			}
 
-			// 3. Interactive input for Description (if flag is empty)
+
 			if agentDesc == "" {
 				fmt.Print("Enter Agent Description: ")
 				desc, _ := reader.ReadString('\n')
