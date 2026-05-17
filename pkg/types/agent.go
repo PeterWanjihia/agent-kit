@@ -20,7 +20,5 @@ type CreateAgentInput struct {
 	Name            string
 	Description     string
 	Image           string
-	ServiceName     string
-	ServiceEndpoint string
-	ServiceVersion  string
+	Services    []AgentService
 }

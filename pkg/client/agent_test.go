@@ -49,7 +49,10 @@ func TestCreateAgentMetadataRejectsServiceNameWithoutEndpoint(t *testing.T) {
 	_, err := CreateAgentMetadata(types.CreateAgentInput{
 		Name:        "CeloTutorAgent",
 		Description: "Explains Celo concepts to developers.",
-		ServiceName: "A2A",
+		Services: []types.AgentService{
+			{Name: "A2A",Version: "1.0.0"},
+			{Name:"MCP",Version: "1.0.1"},
+		},
 	})
 
 	if err == nil {
@@ -61,7 +64,11 @@ func TestCreateAgentMetadataRejectsServiceEndpointWithoutName(t *testing.T) {
 	_, err := CreateAgentMetadata(types.CreateAgentInput{
 		Name:            "CeloTutorAgent",
 		Description:     "Explains Celo concepts to developers.",
-		ServiceEndpoint: "https://agent.example/.well-known/agent-card.json",
+		Services: []types.AgentService{
+			{Endpoint: "https://agent.example/.well-known/agent-card.json",Version: "1.0.0"},
+			{Endpoint: "https://agent.example2/.well-known/agent-card.json",Version: "1.0.0"},
+		},
+		
 	})
 
 	if err == nil {
@@ -73,9 +80,9 @@ func TestCreateAgentMetadataIncludesValidService(t *testing.T) {
 	metadata, err := CreateAgentMetadata(types.CreateAgentInput{
 		Name:            "CeloTutorAgent",
 		Description:     "Explains Celo concepts to developers.",
-		ServiceName:     "A2A",
-		ServiceEndpoint: "https://agent.example/.well-known/agent-card.json",
-		ServiceVersion:  "1.0.0",
+		Services: []types.AgentService{
+			{Name:"A2A",Endpoint: "https://agent.example/.well-known/agent-card.json",Version: "1.0.0"},
+		},
 	})
 
 	if err != nil {
