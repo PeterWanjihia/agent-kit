@@ -17,9 +17,9 @@ func CreateAgentMetadata(input types.CreateAgentInput) (types.AgentMetadata, err
 	name := strings.TrimSpace(input.Name)
 	description := strings.TrimSpace(input.Description)
 	image := strings.TrimSpace(input.Image)
-	serviceName := strings.TrimSpace(input.ServiceName)
-	serviceEndpoint := strings.TrimSpace(input.ServiceEndpoint)
-	serviceVersion := strings.TrimSpace(input.ServiceVersion)
+	// serviceName := strings.TrimSpace(input.Services)
+	// serviceEndpoint := strings.TrimSpace(input.ServiceEndpoint)
+	// serviceVersion := strings.TrimSpace(input.ServiceVersion)
 
 	if name == "" {
 		return types.AgentMetadata{}, fmt.Errorf("agent name is required")
@@ -41,32 +41,38 @@ func CreateAgentMetadata(input types.CreateAgentInput) (types.AgentMetadata, err
 		return types.AgentMetadata{}, fmt.Errorf("agent image must be a valid URI")
 	}
 
-	if serviceName == "" && serviceEndpoint != "" {
-		return types.AgentMetadata{}, fmt.Errorf("service name is required when service endpoint is provided")
+	for _, s := range input.Services {
+	name := strings.TrimSpace(s.Name)
+	endpoint := strings.TrimSpace(s.Endpoint)
+
+	if name == "" && endpoint != "" {
+		return types.AgentMetadata{}, fmt.Errorf(
+			"service name is required when endpoint is provided",
+		)
 	}
 
-	if serviceName != "" && serviceEndpoint == "" {
-		return types.AgentMetadata{}, fmt.Errorf("service endpoint is required when service name is provided")
+	if name != "" && endpoint == "" {
+		return types.AgentMetadata{}, fmt.Errorf(
+			"service endpoint is required for service %q",
+			name,
+		)
 	}
+
+	if name == "" && endpoint == "" {
+		return types.AgentMetadata{}, fmt.Errorf(
+			"service name and endpoint cannot both be empty",
+		)
+	}
+}
 
 	metadata := types.AgentMetadata{
 		Type:        types.AgentRegistrationType,
 		Name:        name,
 		Description: description,
 		Image:       image,
+		Services:    input.Services,
 	}
 
-	if serviceName != "" && serviceEndpoint != "" {
-		if !isValidURI(serviceEndpoint) {
-			return types.AgentMetadata{}, fmt.Errorf("service endpoint must be a valid URI")
-		}
-
-		metadata.Services = append(metadata.Services, types.AgentService{
-			Name:     serviceName,
-			Endpoint: serviceEndpoint,
-			Version:  serviceVersion,
-		})
-	}
 
 	return metadata, nil
 }
