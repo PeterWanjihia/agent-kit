@@ -9,12 +9,12 @@ type ContractsRegistry struct{
 type Erc8004ContractsRegistry struct{
 	ChainName string
 	ContractAddress ContractsRegistry
-	Rpc_Url NetworkConfig
 
 }
 
 
 type NetworkConfig struct{
+	ChainName string
 	RPC_URL string
 	
 }
