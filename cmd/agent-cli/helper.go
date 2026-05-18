@@ -36,7 +36,6 @@ func printSummary(cmd *cobra.Command, metadata types.AgentMetadata) {
 	}
 }
 
-
 func prompt(reader *bufio.Reader, label string) (string, error) {
 	fmt.Print(label)
 
@@ -96,11 +95,11 @@ func newCreateCommand() *cobra.Command {
 				return err
 			}
 			parsedServices, err := parseServices(services)
-if err != nil {
-	return err
-}
+			if err != nil {
+				return err
+			}
 
-input.Services = parsedServices
+			input.Services = parsedServices
 
 			metadata, err := client.CreateAgentMetadata(input)
 			if err != nil {
@@ -126,23 +125,22 @@ input.Services = parsedServices
 			return nil
 		},
 	}
-     
+
 	createCmd.Flags().StringVarP(&input.Name, "name", "n", "", "Name of the agent")
 	createCmd.Flags().StringVarP(&input.Description, "desc", "d", "", "Description of the agent")
 	createCmd.Flags().StringVar(&input.Image, "image", "", "Image URI for the agent")
 	createCmd.Flags().StringArrayVar(
-	&services,
-	"service",
-	nil,
-	"Service format: name,endpoint[,version]",
-)
+		&services,
+		"service",
+		nil,
+		"Service format: name,endpoint[,version]",
+	)
 	createCmd.Flags().StringVarP(&outPath, "out", "o", "", "Write agent metadata JSON to a file")
 	createCmd.Flags().BoolVar(&jsonOutput, "json", false, "Print agent metadata as JSON")
 	createCmd.Flags().BoolVar(&noInteractive, "no-interactive", false, "Fail instead of prompting when required fields are missing")
 
 	return createCmd
 }
-
 
 func collectMissingRequiredInput(input *types.CreateAgentInput, noInteractive bool) error {
 	input.Name = strings.TrimSpace(input.Name)
@@ -187,7 +185,7 @@ func parseServices(values []string) ([]types.AgentService, error) {
 		}
 
 		parts := strings.Split(v, ",")
-		fmt.Println("LEn",len(parts))
+		fmt.Println("LEn", len(parts))
 
 		if len(parts) < 2 {
 			return nil, fmt.Errorf(

@@ -17,8 +17,16 @@ type AgentService struct {
 }
 
 type CreateAgentInput struct {
-	Name            string
-	Description     string
-	Image           string
+	Name        string
+	Description string
+	Image       string
 	Services    []AgentService
+}
+
+type Agent struct {
+	Ref      AgentRef       `json:"ref"`
+	Owner    string         `json:"owner,omitempty"`
+	URI      string         `json:"uri,omitempty"`
+	Metadata AgentMetadata  `json:"metadata"`
+	Services []AgentService `json:"services,omitempty"`
 }
