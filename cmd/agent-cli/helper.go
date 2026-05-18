@@ -185,7 +185,6 @@ func parseServices(values []string) ([]types.AgentService, error) {
 		}
 
 		parts := strings.Split(v, ",")
-		fmt.Println("LEn", len(parts))
 
 		if len(parts) < 2 {
 			return nil, fmt.Errorf(
