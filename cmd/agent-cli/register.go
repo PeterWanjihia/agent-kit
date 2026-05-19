@@ -6,6 +6,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ronexlemon/agent-kit/pkg/chain"
 	network "github.com/ronexlemon/agent-kit/pkg/network"
 	"github.com/spf13/cobra"
@@ -62,8 +63,8 @@ func runRegister(cmd *cobra.Command, opts *registerOptions) (*registerResult, er
 		return nil, err
 	}
 
-	if _, err := chain.MakeAuth(opts.privateKey, 1); err != nil {
-		return nil, fmt.Errorf("invalid private key: %w", err)
+	if err := validatePrivateKey(opts.privateKey); err != nil {
+		return nil, err
 	}
 
 	resolved, err := network.ResolveNetworkClient(cmd.Context(), network.NetworkClientConfig{
@@ -92,6 +93,20 @@ func runRegister(cmd *cobra.Command, opts *registerOptions) (*registerResult, er
 		ChainID:  resolved.ChainID,
 		Registry: resolved.IdentityRegistryAddress,
 	}, nil
+}
+
+func validatePrivateKey(privateKey string) error {
+	privateKey = strings.TrimPrefix(strings.TrimSpace(privateKey), "0x")
+
+	if privateKey == "" {
+		return fmt.Errorf("private key is required")
+	}
+
+	if _, err := crypto.HexToECDSA(privateKey); err != nil {
+		return fmt.Errorf("invalid private key: %w", err)
+	}
+
+	return nil
 }
 
 func (opts *registerOptions) normalizeAndValidate() error {
