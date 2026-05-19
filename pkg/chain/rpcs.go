@@ -48,7 +48,7 @@ var Testnet_RPCS = map[string]types.NetworkConfig{
 	},
 	"Celo": {
 		ChainName: "celo",
-		RPC_URL:  "https://alfajores-forno.celo-testnet.org",
+		RPC_URL:  "https://celo-sepolia.drpc.org",
 	},
 	"Monad": {
 		ChainName: "monad",
