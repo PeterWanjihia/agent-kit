@@ -1,4 +1,4 @@
-package erc8004
+package chain
 
 import "testing"
 

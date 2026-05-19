@@ -1,4 +1,4 @@
-package erc8004
+package chain
 
 import (
 	"context"
@@ -8,6 +8,7 @@ import (
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/ronexlemon/agent-kit/pkg/chain"
 	"github.com/ronexlemon/agent-kit/pkg/contract"
+	"github.com/ronexlemon/agent-kit/pkg/erc8004"
 )
 
 const (
@@ -30,7 +31,7 @@ type ResolvedNetworkClient struct {
 	ReputationRegistryAddress string
 
 	Eth    *ethclient.Client
-	Client *ERC8004Client
+	Client *erc8004.ERC8004Client
 }
 
 func ResolveNetworkClient(ctx context.Context, cfg NetworkClientConfig) (*ResolvedNetworkClient, error) {
@@ -61,7 +62,7 @@ func ResolveNetworkClient(ctx context.Context, cfg NetworkClientConfig) (*Resolv
 		return nil, fmt.Errorf("failed to resolve chain id: %w", err)
 	}
 
-	client, err := NewERC8004Client(eth, identity, reputation)
+	client, err := erc8004.NewERC8004Client(eth, identity, reputation)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create erc8004 client: %w", err)
 	}
