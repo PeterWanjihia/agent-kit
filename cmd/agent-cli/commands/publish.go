@@ -1,4 +1,4 @@
-package main
+package commands
 
 import (
 	"context"
@@ -8,12 +8,12 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/ronexlemon/agent-kit/pkg/storage"
+	"github.com/ronexlemon/agent-kit/internal/storage"
 	"github.com/ronexlemon/agent-kit/pkg/types"
 	"github.com/spf13/cobra"
 )
 
-func newPublishCommand() *cobra.Command {
+func NewPublishCommand() *cobra.Command {
 	var filePath string
 	var jwt string
 	var name string

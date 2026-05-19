@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/ronexlemon/agent-kit/cmd/agent-cli/commands"
 	"github.com/spf13/cobra"
 )
 
@@ -13,9 +14,9 @@ var rootCmd = &cobra.Command{
 }
 
 func Execute() {
-	rootCmd.AddCommand(newCreateCommand())
-	rootCmd.AddCommand(newPublishCommand())
-	rootCmd.AddCommand(newRegisterCommand())
+	rootCmd.AddCommand(commands.NewCreateCommand())
+	rootCmd.AddCommand(commands.NewPublishCommand())
+	rootCmd.AddCommand(commands.NewRegisterCommand())
 
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Fprintln(os.Stderr, "error:", err)
