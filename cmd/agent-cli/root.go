@@ -15,6 +15,7 @@ var rootCmd = &cobra.Command{
 func Execute() {
 	rootCmd.AddCommand(newCreateCommand())
 	rootCmd.AddCommand(newPublishCommand())
+	rootCmd.AddCommand(newRegisterCommand())
 
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Fprintln(os.Stderr, "error:", err)
