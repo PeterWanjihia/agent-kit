@@ -1,23 +1,48 @@
-# Build stage
+
 FROM golang:1.25-alpine AS builder
+
 WORKDIR /app
+
+
+RUN apk add --no-cache git
+
+
 COPY go.mod go.sum ./
 RUN go mod download
+
+
 COPY . .
 
-# Explicitly target linux/amd64
-ENV CGO_ENABLED=0 GOOS=linux GOARCH=amd64
 
-RUN go build -o /app/bin/agent-node    ./cmd/agent-node/main.go
-RUN go build -o /app/bin/agent-cli     ./cmd/agent-cli/main.go
-RUN go build -o /app/bin/agent-gateway ./cmd/agent-gateway/main.go
+ENV CGO_ENABLED=0
 
-# Final stage
+
+RUN mkdir -p /build
+
+
+RUN go build -ldflags="-s -w" -o /build/agent-kit ./cmd/agent-cli
+
+# Optional additional binaries 
+#RUN go build -ldflags="-s -w" -o /build/agent-node ./cmd/agent-node
+#RUN go build -ldflags="-s -w" -o /build/agent-gateway ./cmd/agent-gateway
+
+
+
 FROM alpine:latest
-WORKDIR /root/
-COPY --from=builder /app/bin/agent-node    .
-COPY --from=builder /app/bin/agent-cli     .
-COPY --from=builder /app/bin/agent-gateway .
-RUN chmod +x ./agent-node ./agent-cli ./agent-gateway
-EXPOSE 8080 9090
-CMD ["./agent-node"]
+
+WORKDIR /app
+
+RUN apk --no-cache add ca-certificates
+
+
+COPY --from=builder /build/agent-kit /usr/local/bin/agent-kit
+
+# COPY --from=builder /build/agent-node /usr/local/bin/agent-node
+# COPY --from=builder /build/agent-gateway /usr/local/bin/agent-gateway
+
+RUN chmod +x /usr/local/bin/agent-kit
+
+ENTRYPOINT ["agent-kit"]
+
+
+CMD ["--help"]
